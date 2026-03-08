@@ -5,40 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>AttendEase — School Attendance System</title>
 
-  <!--
-    ╔══════════════════════════════════════════════════╗
-    ║  AttendEase · Component Architecture             ║
-    ╠══════════════════════════════════════════════════╣
-    ║  components/                                     ║
-    ║    Login.html         ← Login screen (3 roles)   ║
-    ║    Sidebar.html       ← Role-aware sidebar nav   ║
-    ║    logo.png          ← Your school logo file      ║
-    ║    Topbar.html        ← Page header              ║
-    ║    StatsCards.html    ← Admin/Teacher stat cards ║
-    ║    Charts.html        ← Weekly + donut charts    ║
-    ║    AttendanceTable.html← Mark attendance table   ║
-    ║    StudentRecord.html ← Student personal record  ║
-    ║                                                  ║
-    ║  styles/                                         ║
-    ║    globals.css        ← Variables, base, btns   ║
-    ║    Login.css          ← Login page styles        ║
-    ║    Sidebar.css        ← Sidebar styles           ║
-    ║                                                    ║
-    ║    StatsCards.css     ← Stat card styles         ║
-    ║    Charts.css         ← Chart styles             ║
-    ║    AttendanceTable.css← Table styles             ║
-    ║    StudentRecord.css  ← Student view styles      ║
-    ║                                                  ║
-    ║  JS (inline per component):                      ║
-    ║    auth.js            ← Login / logout logic     ║
-    ║    router.js          ← Role-based view routing  ║
-    ║    Charts.js          ← Bar + donut rendering    ║
-    ║    AttendanceTable.js ← Mark/save/filter logic   ║
-    ║    StudentRecord.js   ← Student record view      ║
-    ║                                                    ║
-    ╚══════════════════════════════════════════════════╝
-  -->
-
+ 
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 
   <style>
@@ -446,10 +413,7 @@
      Change API_BASE to match your server.
      ═══════════════════════════════════════ -->
 <script>
-  // ⚠️ After deploying to Railway, replace this with your Railway URL:
-  // e.g. 'https://attendease-production.up.railway.app/api'
-  // For local XAMPP testing: 'http://localhost/attendease/api'
-  const API_BASE = window.location.origin + '/api';
+  const API_BASE = 'https://aclc-attendance-monitoring-api-production.up.railway.app/api';
 
   async function api(endpoint, method = 'GET', body = null) {
     const opts = {
