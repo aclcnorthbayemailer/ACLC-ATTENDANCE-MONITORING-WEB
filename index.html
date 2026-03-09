@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AttendEase — School Attendance System</title>
+  <title>ACLC Monitor — School Attendance System</title>
 
- 
+
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
 
   <style>
@@ -108,6 +108,36 @@
 
     .login-hint { font-size:11px; color:var(--muted); text-align:center; margin-top:6px; }
     .login-hint span { color:var(--blue); font-weight:600; }
+    .login-switch { font-size:12px; color:var(--muted); text-align:center; margin-top:14px; }
+    .login-switch a { color:var(--blue); font-weight:600; cursor:pointer; text-decoration:underline; }
+    .form-select { padding:10px 13px; border:1.5px solid var(--border); border-radius:var(--radius-sm); font-size:13px; font-family:'DM Sans',sans-serif; color:var(--text); outline:none; background:white; width:100%; }
+    .form-select:focus { border-color:var(--blue-mid); }
+    .students-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; padding:20px; }
+    .student-card { background:white; border-radius:12px; padding:18px; border:1px solid var(--border); display:flex; align-items:center; gap:14px; transition:box-shadow 0.15s; box-shadow:0 1px 4px rgba(0,0,0,0.05); }
+    .student-card:hover { box-shadow:0 4px 16px rgba(0,48,135,0.1); }
+    .s-avatar { width:44px; height:44px; border-radius:50%; background:var(--blue); display:flex; align-items:center; justify-content:center; color:white; font-weight:700; font-size:15px; flex-shrink:0; }
+    .s-avatar.female { background:var(--primary); }
+    .s-info { flex:1; min-width:0; }
+    .s-name { font-size:13px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .s-meta { font-size:11px; color:var(--muted); margin-top:2px; }
+    .s-usn  { font-size:10px; color:var(--blue); font-family:'DM Mono',monospace; margin-top:3px; }
+    .section-group { margin-bottom:28px; }
+    .section-group-header { font-size:13px; font-weight:700; color:var(--blue); padding:10px 20px 10px; border-bottom:2px solid var(--border); display:flex; align-items:center; gap:8px; background:var(--bg); }
+    .section-badge { background:var(--blue); color:white; font-size:10px; padding:2px 8px; border-radius:20px; }
+    .page-toolbar { display:flex; align-items:center; gap:10px; padding:16px 20px; flex-wrap:wrap; }
+    .pg-search { display:flex; align-items:center; gap:8px; background:white; border:1.5px solid var(--border); border-radius:8px; padding:7px 12px; flex:1; max-width:320px; }
+    .pg-search input { border:none; outline:none; font-size:13px; font-family:'DM Sans',sans-serif; width:100%; background:transparent; }
+    .login-switch { font-size:12px; color:var(--muted); text-align:center; margin-top:14px; }
+    .login-switch a { color:var(--blue); font-weight:600; cursor:pointer; text-decoration:underline; }
+    .signup-card { display:none; }
+    .signup-card.active { display:block; }
+    .login-card.hidden { display:none; }
+    .form-select {
+      padding:10px 13px; border:1.5px solid var(--border); border-radius:var(--radius-sm);
+      font-size:13px; font-family:'DM Sans',sans-serif; color:var(--text); outline:none;
+      transition:border-color 0.15s; background:white; width:100%;
+    }
+    .form-select:focus { border-color:var(--blue-mid); }
 
     /* =============================================
        App Layout
@@ -115,6 +145,39 @@
     #view-app {
       min-height:100vh; flex-direction:row;
     }
+    .students-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:14px; padding:20px; }
+    .student-card {
+      background:white; border-radius:12px; padding:18px; border:1px solid var(--border);
+      display:flex; align-items:center; gap:14px; transition:box-shadow 0.15s;
+      box-shadow:0 1px 4px rgba(0,0,0,0.05);
+    }
+    .student-card:hover { box-shadow:0 4px 16px rgba(0,48,135,0.1); }
+    .student-avatar {
+      width:44px; height:44px; border-radius:50%; background:var(--blue);
+      display:flex; align-items:center; justify-content:center;
+      color:white; font-weight:700; font-size:15px; flex-shrink:0;
+    }
+    .student-avatar.female { background:var(--primary); }
+    .student-info { flex:1; min-width:0; }
+    .student-name { font-size:13px; font-weight:600; color:var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .student-meta { font-size:11px; color:var(--muted); margin-top:2px; }
+    .student-usn  { font-size:10px; color:var(--blue); font-family:'DM Mono',monospace; margin-top:3px; }
+    .section-group { margin-bottom:24px; }
+    .section-group-header {
+      font-size:13px; font-weight:700; color:var(--blue); padding:10px 20px 8px;
+      border-bottom:2px solid var(--border); display:flex; align-items:center; gap:8px;
+    }
+    .section-badge { background:var(--blue); color:white; font-size:10px; padding:2px 8px; border-radius:20px; }
+    .page-toolbar {
+      display:flex; align-items:center; gap:10px; padding:0 20px 16px;
+      flex-wrap:wrap;
+    }
+    .search-box {
+      display:flex; align-items:center; gap:8px;
+      background:white; border:1.5px solid var(--border); border-radius:8px;
+      padding:7px 12px; flex:1; max-width:300px;
+    }
+    .search-box input { border:none; outline:none; font-size:13px; font-family:'DM Sans',sans-serif; width:100%; background:transparent; }
 
     /* =============================================
        Sidebar.css + SchoolLogo.css
@@ -337,7 +400,7 @@
       <div class="login-logo-circle">
         <img src="logo.png" alt="School Logo" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>
       </div>
-      <div class="login-school-name">AttendEase</div>
+      <div class="login-school-name">ACLC Monitor</div>
       <div class="login-school-sub">School Attendance Management System</div>
     </div>
 
@@ -365,6 +428,68 @@
     <div class="login-hint" style="margin-top:16px;">
       Admin: <span>admin / admin123</span> · Teacher: <span>teacher1 / teacher123</span> · Student: <span>student1 / student123</span>
     </div>
+    <div class="login-switch">Don't have an account? <a onclick="showSignup()">Sign up</a></div>
+  </div>
+
+  <!-- Signup Card -->
+  <div class="login-card signup-card" id="signup-card">
+    <div class="login-logo-area">
+      <div class="login-logo-circle">
+        <img src="logo.png" alt="School Logo" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>
+      </div>
+      <div class="login-school-name">Create Account</div>
+      <div class="login-school-sub">ACLC Monitor · School Attendance System</div>
+    </div>
+    <div class="login-form">
+      <div class="form-group">
+        <label class="form-label">Role</label>
+        <select class="form-select" id="signup-role" onchange="toggleSignupUSN()">
+          <option value="admin">🛡 Admin</option>
+          <option value="teacher">📋 Teacher</option>
+          <option value="student">🎓 Student</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input class="form-input" type="text" id="signup-name" placeholder="e.g. Juan Dela Cruz"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Username</label>
+        <input class="form-input" type="text" id="signup-username" placeholder="Enter a username"/>
+      </div>
+      <div class="form-group" id="signup-usn-group" style="display:none;">
+        <label class="form-label">Student Number (USN)</label>
+        <input class="form-input" type="text" id="signup-usn" placeholder="e.g. 2024-00101"/>
+      </div>
+      <div class="form-group" id="signup-section-group" style="display:none;">
+        <label class="form-label">Section</label>
+        <select class="form-select" id="signup-section">
+          <option value="">-- Select Section --</option>
+          <option value="ICT 11-A">ICT 11-A</option>
+          <option value="ICT 11-B">ICT 11-B</option>
+          <option value="ICT 12-A">ICT 12-A</option>
+          <option value="ICT 12-B">ICT 12-B</option>
+          <option value="GAS 11-A">GAS 11-A</option>
+          <option value="GAS 11-B">GAS 11-B</option>
+          <option value="GAS 12-A">GAS 12-A</option>
+          <option value="GAS 12-B">GAS 12-B</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" type="password" id="signup-password" placeholder="Create a password"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Confirm Password</label>
+        <input class="form-input" type="password" id="signup-confirm" placeholder="Repeat your password"/>
+      </div>
+      <div class="login-error" id="signup-error">Something went wrong.</div>
+      <div id="signup-success" style="display:none;background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0;border-radius:8px;padding:10px 13px;font-size:12px;font-weight:500;">
+        ✅ Account created! You can now sign in.
+      </div>
+      <button class="btn btn-blue btn-full" onclick="doSignup()">Create Account →</button>
+    </div>
+    <div class="login-switch">Already have an account? <a onclick="showLogin()">Sign in</a></div>
   </div>
 </div>
 
@@ -380,7 +505,7 @@
       <div class="sidebar-logo-circle">
         <img src="logo.png" alt="School Logo" style="width:100%;height:100%;object-fit:cover;border-radius:50%;"/>
       </div>
-      <div class="sidebar-school-name" id="sidebar-school-name">AttendEase</div>
+      <div class="sidebar-school-name" id="sidebar-school-name">ACLC Monitor</div>
       <div class="sidebar-school-sub" id="sidebar-school-sub">University Portal</div>
       <div class="role-pill" id="role-pill">Admin</div>
     </div>
@@ -414,13 +539,14 @@
      ═══════════════════════════════════════ -->
 <script>
   const API_BASE = 'https://aclc-attendance-monitoring-api-production.up.railway.app/api';
+  let authToken = localStorage.getItem('auth_token') || '';
 
   async function api(endpoint, method = 'GET', body = null) {
     const opts = {
       method,
-      credentials: 'include',
       headers: { 'Content-Type': 'application/json' }
     };
+    if (authToken) opts.headers['X-Auth-Token'] = authToken;
     if (body) opts.body = JSON.stringify(body);
     const res  = await fetch(`${API_BASE}/${endpoint}`, opts);
     const data = await res.json();
@@ -466,6 +592,8 @@
     try {
       const data = await api('login.php', 'POST', { username, password, role: currentRole });
       currentUser = data.user;
+      authToken   = data.token;
+      localStorage.setItem('auth_token', authToken);
       errorEl.classList.remove('visible');
       await showApp();
     } catch (err) {
@@ -482,6 +610,8 @@
   async function doLogout() {
     try { await api('logout.php', 'POST'); } catch(e) {}
     currentUser = null;
+    authToken   = '';
+    localStorage.removeItem('auth_token');
     SECTIONS    = [];
     document.getElementById('view-app').classList.remove('active');
     document.getElementById('view-login').classList.add('active');
@@ -581,6 +711,17 @@
         initAttendanceTable();
       } else if (activePage === 'records') {
         main.innerHTML = renderRecordsPage();
+      } else if (activePage === 'reports') {
+        main.innerHTML = renderReportsPage();
+        loadReportsPage();
+      } else if (activePage === 'students') {
+        main.innerHTML = renderStudentsPageShell();
+        loadStudentsPage();
+      } else if (activePage === 'classes') {
+        main.innerHTML = renderClassesPageShell();
+        loadClassesPage();
+      } else if (activePage === 'settings') {
+        main.innerHTML = renderSettingsPage();
       } else {
         main.innerHTML = renderPlaceholder(activePage);
       }
@@ -591,18 +732,82 @@
   }
 
   function renderPlaceholder(page) {
-    const labels = { reports:'Reports', students:'Students', classes:'Classes', settings:'Settings' };
+    if (page === 'reports')  { return renderReportsPage(); }
+    if (page === 'settings') { return renderSettingsPage(); }
+    const labels = { students:'Students', classes:'Classes' };
+    return `<div class="topbar"><div class="topbar-left"><div class="topbar-bar"></div>
+      <div><div class="page-title">${labels[page]||page}</div></div></div></div>`;
+  }
+
+  function renderReportsPage() {
+    const isAdmin = currentUser.role === 'admin';
     return `
       <div class="topbar">
         <div class="topbar-left"><div class="topbar-bar"></div>
-          <div><div class="page-title">${labels[page]||page}</div>
-          <div class="page-sub">Coming soon · AY 2025–2026</div></div>
+          <div><div class="page-title">Reports</div>
+          <div class="page-sub">Attendance summary · AY 2025–2026</div></div>
+        </div>
+        <button class="btn btn-ghost" onclick="exportReport()">⬇ Export Report</button>
+      </div>
+      <div style="padding:20px;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px;">
+        <div class="panel" style="padding:24px;">
+          <div class="panel-title" style="margin-bottom:16px;">📊 Attendance by Section</div>
+          <div id="report-by-section" style="color:var(--muted);font-size:13px;">Loading…</div>
+        </div>
+        <div class="panel" style="padding:24px;">
+          <div class="panel-title" style="margin-bottom:16px;">📅 Monthly Summary</div>
+          <div id="report-monthly" style="color:var(--muted);font-size:13px;">Loading…</div>
+        </div>
+        <div class="panel" style="padding:24px;grid-column:1/-1;">
+          <div class="panel-title" style="margin-bottom:16px;">🏆 Top Attendance</div>
+          <div id="report-top" style="color:var(--muted);font-size:13px;">Loading…</div>
+        </div>
+      </div>`;
+  }
+
+  function renderSettingsPage() {
+    return `
+      <div class="topbar">
+        <div class="topbar-left"><div class="topbar-bar"></div>
+          <div><div class="page-title">Settings</div>
+          <div class="page-sub">Manage your account</div></div>
         </div>
       </div>
-      <div class="panel" style="padding:48px;text-align:center;animation:fadeUp .4s ease both;">
-        <div style="font-size:40px;margin-bottom:12px;">🚧</div>
-        <div style="font-size:16px;font-weight:600;color:var(--blue);">This page is under construction</div>
-        <div style="font-size:13px;color:var(--muted);margin-top:6px;">Check back soon!</div>
+      <div style="padding:20px;max-width:560px;">
+        <div class="panel" style="padding:28px;margin-bottom:16px;">
+          <div class="panel-title" style="margin-bottom:20px;">👤 Account Info</div>
+          <div class="form-group" style="margin-bottom:14px;">
+            <label class="form-label">Full Name</label>
+            <input class="form-input" type="text" id="settings-name" value="${currentUser.name}"/>
+          </div>
+          <div class="form-group" style="margin-bottom:14px;">
+            <label class="form-label">Role</label>
+            <input class="form-input" type="text" value="${currentUser.role}" disabled style="background:var(--bg);color:var(--muted);"/>
+          </div>
+          ${currentUser.section_name ? `<div class="form-group" style="margin-bottom:14px;">
+            <label class="form-label">Section</label>
+            <input class="form-input" type="text" value="${currentUser.section_name}" disabled style="background:var(--bg);color:var(--muted);"/>
+          </div>` : ''}
+          <button class="btn btn-primary" onclick="saveSettings()">Save Changes</button>
+          <span id="settings-msg" style="font-size:12px;color:var(--green);margin-left:12px;display:none;">✅ Saved!</span>
+        </div>
+        <div class="panel" style="padding:28px;">
+          <div class="panel-title" style="margin-bottom:20px;">🔒 Change Password</div>
+          <div class="form-group" style="margin-bottom:14px;">
+            <label class="form-label">Current Password</label>
+            <input class="form-input" type="password" id="settings-old-pass" placeholder="Enter current password"/>
+          </div>
+          <div class="form-group" style="margin-bottom:14px;">
+            <label class="form-label">New Password</label>
+            <input class="form-input" type="password" id="settings-new-pass" placeholder="Enter new password"/>
+          </div>
+          <div class="form-group" style="margin-bottom:14px;">
+            <label class="form-label">Confirm New Password</label>
+            <input class="form-input" type="password" id="settings-confirm-pass" placeholder="Repeat new password"/>
+          </div>
+          <button class="btn btn-primary" onclick="changePassword()">Change Password</button>
+          <span id="pass-msg" style="font-size:12px;margin-left:12px;display:none;"></span>
+        </div>
       </div>`;
   }
 </script>
@@ -624,7 +829,7 @@
           </div>
         </div>
         <div style="display:flex;align-items:center;gap:10px;">
-          ${isAdmin ? '<button class="btn btn-ghost">⬇ Export Report</button>' : ''}
+          ${isAdmin ? '<button class="btn btn-ghost" onclick="exportReport()">⬇ Export Report</button>' : ''}
           <button class="btn btn-primary" onclick="navigateTo('attendance')">+ Mark Attendance</button>
         </div>
       </div>
@@ -678,8 +883,8 @@
           <div class="page-sub">${isAdmin ? 'All sections · AY 2025–2026' : currentUser.section + ' · AY 2025–2026'}</div></div>
         </div>
         <div style="display:flex;gap:8px;">
-          <button class="btn btn-ghost">⬇ Export CSV</button>
-          ${isAdmin ? '<button class="btn btn-primary">+ Add Student</button>' : ''}
+          <button class="btn btn-ghost" onclick="exportCSV()">⬇ Export CSV</button>
+          ${isAdmin ? '<button class="btn btn-primary" onclick="showAddStudentModal()">+ Add Student</button>' : ''}
         </div>
       </div>
       ${renderAttendanceTableHTML(false, true)}`;
@@ -852,12 +1057,8 @@
         </div></td>
         <td><span style="font-family:'DM Mono',monospace;font-size:12px;color:var(--muted)">${s.usn}</span></td>
         ${!isTeacher ? `<td><span class="badge badge-blue" style="font-size:10px">${activeSection}</span></td>` : ''}
-        <td><div class="status-group">
-          <button class="status-btn ${s.status==='present'?'present':'inactive'}" onclick="setStatus('${safeUsn}','present',this)">Present</button>
-          <button class="status-btn ${s.status==='absent'?'absent':'inactive'}"  onclick="setStatus('${safeUsn}','absent',this)">Absent</button>
-          <button class="status-btn ${s.status==='late'?'late':'inactive'}"     onclick="setStatus('${safeUsn}','late',this)">Late</button>
-        </div></td>
-        <td style="font-family:'DM Mono',monospace;font-size:12px;color:${!s.time_in||s.time_in==='—'?'var(--muted)':'var(--text)'}" id="timein-${s.usn.replace(/-/g,'_')}">${s.time_in||'—'}</td>
+        <td><span class="badge ${getStatusBadge(s.remarks, s.scanned_at)}">${getStatusLabel(s.remarks, s.scanned_at)}</span></td>
+        <td style="font-family:'DM Mono',monospace;font-size:12px;color:var(--muted)">${s.scanned_at||'—'}</td>
         <td><input type="text" placeholder="Add note…" style="border:none;background:transparent;outline:none;font-family:'DM Sans',sans-serif;font-size:12px;color:var(--muted);width:110px" value="${s.remarks||''}" oninput="setRemark('${safeUsn}',this.value)"/></td>
       </tr>`;
     }).join('');
@@ -907,10 +1108,10 @@
     if (btn) { btn.textContent = '⏳ Saving…'; btn.disabled = true; }
     try {
       const records = loadedStudents.map(s => ({
-        usn:     s.usn,
-        status:  s.status,
-        time_in: (!s.time_in || s.time_in === '—') ? null : s.time_in,
-        remarks: s.remarks || null
+        usn:            s.usn,
+        scanned_at:     s.scanned_at || null,
+        attendance_date: activeDate,
+        remarks:        s.remarks || null
       }));
       await api('attendance.php', 'POST', { records, date: activeDate });
       const h = document.getElementById('save-hint');
@@ -924,8 +1125,6 @@
 
   function markUnsaved() { const h=document.getElementById('save-hint'); if(h){h.textContent='Unsaved changes';h.style.color='var(--yellow)';} }
 </script>
-
-// Old code removed — all attendance logic is in the DB-connected block above
 
 <!-- ═══════════════════════════════════════
      JS: Charts.js (DB-connected)
@@ -1023,7 +1222,7 @@
           <div><div class="page-title">My Attendance</div>
           <div class="page-sub">AY 2025–2026 · ${u.section_name || ''}</div></div>
         </div>
-        <button class="btn btn-ghost">⬇ Download Record</button>
+        <button class="btn btn-ghost" onclick="downloadStudentRecord()">⬇ Download Record</button>
       </div>
 
       <div class="student-profile-card">
@@ -1102,5 +1301,446 @@
 
 <!-- SchoolLogo.js removed — logo is now a static file (logo.png) -->
 
+
+<!-- ── Add Student Modal ── -->
+<div id="add-student-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,0.45);z-index:100;align-items:center;justify-content:center;">
+  <div style="background:white;border-radius:16px;padding:32px;width:100%;max-width:480px;box-shadow:0 20px 60px rgba(0,0,0,0.2);animation:fadeUp .3s ease both;max-height:90vh;overflow-y:auto;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;">
+      <div style="font-size:18px;font-weight:700;color:var(--blue);">➕ Add New Student</div>
+      <button onclick="closeAddStudentModal()" style="border:none;background:none;font-size:20px;cursor:pointer;color:var(--muted);">✕</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px;">
+      <div class="form-group"><label class="form-label">Last Name</label><input class="form-input" id="ns-last" placeholder="e.g. Dela Cruz"/></div>
+      <div class="form-group"><label class="form-label">First Name</label><input class="form-input" id="ns-first" placeholder="e.g. Juan"/></div>
+      <div class="form-group"><label class="form-label">Middle Name</label><input class="form-input" id="ns-middle" placeholder="Optional"/></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+        <div class="form-group"><label class="form-label">Age</label><input class="form-input" id="ns-age" type="number" placeholder="16"/></div>
+        <div class="form-group"><label class="form-label">Sex</label>
+          <select class="form-select" id="ns-sex"><option>Male</option><option>Female</option></select>
+        </div>
+      </div>
+      <div class="form-group"><label class="form-label">USN (Student Number)</label><input class="form-input" id="ns-usn" placeholder="e.g. 2024-00101"/></div>
+      <div class="form-group"><label class="form-label">LRN</label><input class="form-input" id="ns-lrn" placeholder="12-digit LRN"/></div>
+      <div class="form-group"><label class="form-label">Section</label>
+        <select class="form-select" id="ns-section">
+          <option value="">-- Select Section --</option>
+          <option>ICT 11-A</option><option>ICT 11-B</option>
+          <option>ICT 12-A</option><option>ICT 12-B</option>
+          <option>GAS 11-A</option><option>GAS 11-B</option>
+          <option>GAS 12-A</option><option>GAS 12-B</option>
+        </select>
+      </div>
+      <div class="form-group"><label class="form-label">Guardian Email</label><input class="form-input" id="ns-email" type="email" placeholder="guardian@email.com"/></div>
+      <div id="ns-error" class="login-error">Something went wrong.</div>
+      <div style="display:flex;gap:10px;margin-top:8px;">
+        <button class="btn btn-ghost" onclick="closeAddStudentModal()" style="flex:1;">Cancel</button>
+        <button class="btn btn-primary" onclick="submitAddStudent()" style="flex:2;" id="ns-btn">Add Student</button>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
-</html>
+</script>
+
+<!-- ═══════════════════════════════════════
+     JS: Signup, Students, Classes
+     ═══════════════════════════════════════ -->
+<script>
+  // ── Signup helpers ────────────────────────────────────────
+  function showSignup() {
+    document.getElementById('signup-card').style.display = 'block';
+    document.querySelector('.login-card:not(#signup-card)').style.display = 'none';
+    document.getElementById('signup-error').classList.remove('visible');
+    document.getElementById('signup-success').style.display = 'none';
+  }
+  function showLogin() {
+    document.getElementById('signup-card').style.display = 'none';
+    document.querySelector('.login-card:not(#signup-card)').style.display = 'block';
+  }
+  function toggleSignupFields() {
+    const role = document.getElementById('signup-role').value;
+    document.getElementById('sg-usn-grp').style.display     = role === 'student' ? 'flex' : 'none';
+    document.getElementById('sg-section-grp').style.display = (role === 'student' || role === 'teacher') ? 'flex' : 'none';
+    document.getElementById('sg-usn-grp').style.flexDirection = 'column';
+    document.getElementById('sg-section-grp').style.flexDirection = 'column';
+  }
+  function toggleSignupUSN() { toggleSignupFields(); }
+
+  async function doSignup() {
+    const role     = document.getElementById('signup-role').value;
+    const name     = document.getElementById('signup-name').value.trim();
+    const username = document.getElementById('signup-username').value.trim();
+    const password = document.getElementById('signup-password').value;
+    const confirm  = document.getElementById('signup-confirm').value;
+    const usn      = document.getElementById('signup-usn')?.value.trim() || '';
+    const section  = document.getElementById('signup-section')?.value || '';
+    const errEl    = document.getElementById('signup-error');
+    const succEl   = document.getElementById('signup-success');
+    const btn      = document.querySelector('#signup-card .btn-blue');
+
+    errEl.classList.remove('visible');
+    succEl.style.display = 'none';
+
+    if (!name || !username || !password) { errEl.textContent = 'Please fill in all required fields.'; errEl.classList.add('visible'); return; }
+    if (password !== confirm) { errEl.textContent = 'Passwords do not match.'; errEl.classList.add('visible'); return; }
+    if (password.length < 6)  { errEl.textContent = 'Password must be at least 6 characters.'; errEl.classList.add('visible'); return; }
+    if (role === 'student' && !usn) { errEl.textContent = 'Please enter your Student Number (USN).'; errEl.classList.add('visible'); return; }
+    if ((role === 'student' || role === 'teacher') && !section) { errEl.textContent = 'Please select a section.'; errEl.classList.add('visible'); return; }
+
+    btn.textContent = 'Creating…'; btn.disabled = true;
+    try {
+      await api('signup.php', 'POST', { role, name, username, password, usn, section });
+      succEl.style.display = 'block';
+      setTimeout(() => showLogin(), 2000);
+    } catch(err) {
+      errEl.textContent = err.message || 'Signup failed. Try a different username.';
+      errEl.classList.add('visible');
+    } finally {
+      btn.textContent = 'Create Account →'; btn.disabled = false;
+    }
+  }
+
+  // ── Status helpers (scan-based) ───────────────────────────
+  function getStatusLabel(remarks, scanned_at) {
+    if (!remarks && !scanned_at) return 'Absent';
+    const r = (remarks || '').toLowerCase();
+    if (r.includes('tardy') || r.includes('late')) return 'Late';
+    return 'Present';
+  }
+  function getStatusBadge(remarks, scanned_at) {
+    if (!remarks && !scanned_at) return 'badge-red';
+    const r = (remarks || '').toLowerCase();
+    if (r.includes('tardy') || r.includes('late')) return 'badge-yellow';
+    return 'badge-green';
+  }
+
+  // ── Students Page ─────────────────────────────────────────
+  function renderStudentsPageShell() {
+    return `
+      <div class="topbar">
+        <div class="topbar-left"><div class="topbar-bar"></div>
+          <div><div class="page-title">Students</div>
+          <div class="page-sub">All enrolled students · AY 2025–2026</div></div>
+        </div>
+      </div>
+      <div class="page-toolbar">
+        <div class="pg-search">
+          <span style="color:var(--muted)">🔍</span>
+          <input type="text" placeholder="Search by name, USN, LRN…" oninput="filterStudentsPage(this.value)" id="students-search"/>
+        </div>
+        <select class="form-select" style="max-width:160px;" onchange="filterStudentsPage(document.getElementById('students-search').value)" id="students-section-filter">
+          <option value="">All Sections</option>
+          ${SECTIONS.map(s => `<option value="${s.name}">${s.name}</option>`).join('')}
+        </select>
+        <span style="font-size:12px;color:var(--muted)" id="students-count">Loading…</span>
+      </div>
+      <div id="students-list" style="padding:0 20px 20px;">
+        <div style="text-align:center;padding:40px;color:var(--muted)">Loading students…</div>
+      </div>`;
+  }
+
+  let allStudentsData = [];
+
+  async function loadStudentsPage() {
+    try {
+      const data = await api('students.php?all=1');
+      allStudentsData = data.students || [];
+      renderStudentsGrid(allStudentsData);
+    } catch(err) {
+      document.getElementById('students-list').innerHTML = `<div style="color:var(--primary);padding:20px">Error: ${err.message}</div>`;
+    }
+  }
+
+  function filterStudentsPage(q) {
+    const section = document.getElementById('students-section-filter')?.value || '';
+    const lq = q.toLowerCase();
+    let list = allStudentsData;
+    if (section) list = list.filter(s => s.section === section);
+    if (q) list = list.filter(s =>
+      (s.full_name||'').toLowerCase().includes(lq) ||
+      (s.last_name||'').toLowerCase().includes(lq) ||
+      (s.first_name||'').toLowerCase().includes(lq) ||
+      (s.usn||'').includes(lq) ||
+      (s.lrn||'').includes(lq)
+    );
+    renderStudentsGrid(list);
+  }
+
+  function renderStudentsGrid(list) {
+    const container = document.getElementById('students-list');
+    const countEl   = document.getElementById('students-count');
+    if (countEl) countEl.textContent = `${list.length} student${list.length!==1?'s':''}`;
+    if (!list.length) { container.innerHTML = `<div style="text-align:center;padding:40px;color:var(--muted)">No students found.</div>`; return; }
+    const colors = ['#003087','#c8102e','#1a56c4','#0891b2','#16a34a','#7c3aed','#b45309','#db2777'];
+    container.innerHTML = `<div class="students-grid">${list.map((s, i) => {
+      const ini = ((s.first_name||'').charAt(0)+(s.last_name||'').charAt(0)).toUpperCase();
+      const name = `${s.last_name}, ${s.first_name}${s.middle_name?' '+s.middle_name.charAt(0)+'.':''}`;
+      const female = (s.sex||'').toLowerCase() === 'female';
+      return `<div class="student-card">
+        <div class="s-avatar${female?' female':''}" style="${!female?'background:'+colors[i%colors.length]:''}"> ${ini}</div>
+        <div class="s-info">
+          <div class="s-name">${name}</div>
+          <div class="s-meta">${s.section||''} · ${s.sex||''} · Age ${s.age||'—'}</div>
+          <div class="s-usn">${s.usn}</div>
+        </div>
+      </div>`;
+    }).join('')}</div>`;
+  }
+
+  // ── Classes Page ──────────────────────────────────────────
+  function renderClassesPageShell() {
+    return `
+      <div class="topbar">
+        <div class="topbar-left"><div class="topbar-bar"></div>
+          <div><div class="page-title">Classes</div>
+          <div class="page-sub">Students grouped by section · AY 2025–2026</div></div>
+        </div>
+      </div>
+      <div id="classes-list" style="padding:0 0 20px;">
+        <div style="text-align:center;padding:40px;color:var(--muted)">Loading classes…</div>
+      </div>`;
+  }
+
+  async function loadClassesPage() {
+    try {
+      const data = await api('students.php?all=1');
+      renderClassesList(data.students || []);
+    } catch(err) {
+      document.getElementById('classes-list').innerHTML = `<div style="color:var(--primary);padding:20px">Error: ${err.message}</div>`;
+    }
+  }
+
+  function renderClassesList(students) {
+    const container = document.getElementById('classes-list');
+    // Group by section
+    const groups = {};
+    students.forEach(s => {
+      const sec = s.section || 'Unknown';
+      if (!groups[sec]) groups[sec] = [];
+      groups[sec].push(s);
+    });
+    // Sort sections
+    const sorted = Object.keys(groups).sort();
+    const colors = ['#003087','#c8102e','#1a56c4','#0891b2','#16a34a','#7c3aed','#b45309','#db2777'];
+
+    container.innerHTML = sorted.map(section => {
+      const list = groups[section];
+      return `<div class="section-group">
+        <div class="section-group-header">
+          <span>${section}</span>
+          <span class="section-badge">${list.length} student${list.length!==1?'s':''}</span>
+        </div>
+        <div class="students-grid" style="padding:14px 20px;">
+          ${list.map((s, i) => {
+            const ini = ((s.first_name||'').charAt(0)+(s.last_name||'').charAt(0)).toUpperCase();
+            const name = `${s.last_name}, ${s.first_name}${s.middle_name?' '+s.middle_name.charAt(0)+'.':''}`;
+            const female = (s.sex||'').toLowerCase() === 'female';
+            return `<div class="student-card">
+              <div class="s-avatar${female?' female':''}" style="${!female?'background:'+colors[i%colors.length]:''}">${ini}</div>
+              <div class="s-info">
+                <div class="s-name">${name}</div>
+                <div class="s-meta">${s.sex||''} · Age ${s.age||'—'} · LRN: ${s.lrn||'—'}</div>
+                <div class="s-usn">${s.usn}</div>
+              </div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>`;
+    }).join('');
+  }
+</script>
+
+
+<!-- ═══════════════════════════════════════
+     JS: All remaining functions
+     ═══════════════════════════════════════ -->
+<script>
+  // ── Export Report (CSV download) ──────────────────────────
+  async function exportReport() {
+    try {
+      const data = await api('students.php?all=1');
+      const students = data.students || [];
+      let csv = 'Last Name,First Name,Middle Name,USN,LRN,Section,Sex,Age,Guardian Email\n';
+      students.forEach(s => {
+        csv += `"${s.last_name||''}","${s.first_name||''}","${s.middle_name||''}","${s.usn||''}","${s.lrn||''}","${s.section||''}","${s.sex||''}","${s.age||''}","${s.guardian_email||''}"\n`;
+      });
+      downloadCSV(csv, 'ACLC_Monitor_Report_' + new Date().toISOString().split('T')[0] + '.csv');
+    } catch(err) { alert('Export failed: ' + err.message); }
+  }
+
+  // ── Export CSV (attendance records) ──────────────────────
+  async function exportCSV() {
+    try {
+      const section = activeSection || '';
+      const date    = activeDate || new Date().toISOString().split('T')[0];
+      const data    = await api(`students.php?section=${encodeURIComponent(section)}&date=${date}`);
+      const students = data.students || [];
+      let csv = 'USN,Name,Section,LRN,Scanned At,Status,Remarks\n';
+      students.forEach(s => {
+        const status = !s.remarks && !s.scanned_at ? 'Absent' : (s.remarks||'').toLowerCase().includes('tardy')||(s.remarks||'').toLowerCase().includes('late') ? 'Late' : 'Present';
+        csv += `"${s.usn}","${s.full_name||''}","${s.section||''}","${s.lrn||''}","${s.scanned_at||''}","${status}","${s.remarks||''}"\n`;
+      });
+      downloadCSV(csv, 'ACLC_Attendance_' + section.replace(/\s/g,'_') + '_' + date + '.csv');
+    } catch(err) { alert('Export failed: ' + err.message); }
+  }
+
+  function downloadCSV(csv, filename) {
+    const blob = new Blob([csv], { type: 'text/csv' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url; a.download = filename; a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  // ── Download Student Record (CSV) ────────────────────────
+  async function downloadStudentRecord() {
+    try {
+      const usn  = currentUser.usn;
+      const data = await api(`attendance.php?usn=${encodeURIComponent(usn)}&days=365`);
+      const history = data.history || [];
+      let csv = 'Date,Status,Scanned At,Remarks\n';
+      history.forEach(d => {
+        csv += `"${d.date}","${d.status}","${d.scanned_at||''}","${d.remarks||''}"\n`;
+      });
+      downloadCSV(csv, 'My_Attendance_Record_' + usn + '.csv');
+    } catch(err) { alert('Download failed: ' + err.message); }
+  }
+
+  // ── Add Student Modal ─────────────────────────────────────
+  function showAddStudentModal() {
+    const modal = document.getElementById('add-student-modal');
+    modal.style.display = 'flex';
+    document.getElementById('ns-error').classList.remove('visible');
+  }
+  function closeAddStudentModal() {
+    document.getElementById('add-student-modal').style.display = 'none';
+    ['ns-last','ns-first','ns-middle','ns-age','ns-usn','ns-lrn','ns-email'].forEach(id => {
+      const el = document.getElementById(id); if(el) el.value = '';
+    });
+  }
+
+  async function submitAddStudent() {
+    const last    = document.getElementById('ns-last').value.trim();
+    const first   = document.getElementById('ns-first').value.trim();
+    const middle  = document.getElementById('ns-middle').value.trim();
+    const age     = document.getElementById('ns-age').value.trim();
+    const sex     = document.getElementById('ns-sex').value;
+    const usn     = document.getElementById('ns-usn').value.trim();
+    const lrn     = document.getElementById('ns-lrn').value.trim();
+    const section = document.getElementById('ns-section').value;
+    const email   = document.getElementById('ns-email').value.trim();
+    const errEl   = document.getElementById('ns-error');
+    const btn     = document.getElementById('ns-btn');
+
+    errEl.classList.remove('visible');
+    if (!last || !first || !usn || !section) {
+      errEl.textContent = 'Last name, first name, USN, and section are required.';
+      errEl.classList.add('visible'); return;
+    }
+
+    btn.textContent = 'Adding…'; btn.disabled = true;
+    try {
+      await api('students.php', 'POST', { last_name:last, first_name:first, middle_name:middle, age, sex, usn, lrn, section, guardian_email:email });
+      closeAddStudentModal();
+      // Reload students if on students/classes page
+      if (activePage === 'students') loadStudentsPage();
+      if (activePage === 'classes')  loadClassesPage();
+      if (activePage === 'records' || activePage === 'attendance') await loadStudents();
+      alert('✅ Student added successfully!');
+    } catch(err) {
+      errEl.textContent = err.message || 'Failed to add student.';
+      errEl.classList.add('visible');
+    } finally {
+      btn.textContent = 'Add Student'; btn.disabled = false;
+    }
+  }
+
+  // ── Settings: Save name ───────────────────────────────────
+  async function saveSettings() {
+    const name = document.getElementById('settings-name').value.trim();
+    const msg  = document.getElementById('settings-msg');
+    if (!name) return;
+    try {
+      await api('settings.php', 'POST', { action: 'update_name', name });
+      currentUser.name = name;
+      document.getElementById('sidebar-username').textContent = name;
+      msg.style.display = 'inline'; msg.textContent = '✅ Saved!'; msg.style.color = 'var(--green)';
+      setTimeout(() => msg.style.display = 'none', 3000);
+    } catch(err) {
+      msg.style.display = 'inline'; msg.textContent = '❌ ' + err.message; msg.style.color = 'var(--primary)';
+    }
+  }
+
+  // ── Settings: Change password ─────────────────────────────
+  async function changePassword() {
+    const oldPass = document.getElementById('settings-old-pass').value;
+    const newPass = document.getElementById('settings-new-pass').value;
+    const confirm = document.getElementById('settings-confirm-pass').value;
+    const msg     = document.getElementById('pass-msg');
+
+    if (!oldPass || !newPass) { msg.style.display='inline'; msg.textContent='❌ Please fill in all fields.'; msg.style.color='var(--primary)'; return; }
+    if (newPass !== confirm)  { msg.style.display='inline'; msg.textContent='❌ Passwords do not match.'; msg.style.color='var(--primary)'; return; }
+    if (newPass.length < 6)   { msg.style.display='inline'; msg.textContent='❌ Password must be at least 6 characters.'; msg.style.color='var(--primary)'; return; }
+
+    try {
+      await api('settings.php', 'POST', { action: 'change_password', old_password: oldPass, new_password: newPass });
+      msg.style.display = 'inline'; msg.textContent = '✅ Password changed!'; msg.style.color = 'var(--green)';
+      document.getElementById('settings-old-pass').value = '';
+      document.getElementById('settings-new-pass').value = '';
+      document.getElementById('settings-confirm-pass').value = '';
+      setTimeout(() => msg.style.display = 'none', 3000);
+    } catch(err) {
+      msg.style.display = 'inline'; msg.textContent = '❌ ' + err.message; msg.style.color = 'var(--primary)';
+    }
+  }
+
+  // ── Reports page data loader ─────────────────────────────
+  async function loadReportsPage() {
+    try {
+      const today  = new Date().toISOString().split('T')[0];
+      const data   = await api(`dashboard.php?date=${today}`);
+      const stData = await api('students.php?all=1');
+      const students = stData.students || [];
+
+      // By section
+      const secGroups = {};
+      students.forEach(s => { if(!secGroups[s.section]) secGroups[s.section]=0; secGroups[s.section]++; });
+      const secEl = document.getElementById('report-by-section');
+      if (secEl) secEl.innerHTML = Object.entries(secGroups).sort().map(([sec,cnt]) =>
+        `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+          <span style="font-weight:500">${sec}</span>
+          <span class="badge badge-blue">${cnt} students</span>
+        </div>`).join('');
+
+      // Monthly summary from stats
+      const s = data.stats;
+      const monthEl = document.getElementById('report-monthly');
+      if (monthEl) monthEl.innerHTML = `
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+          <span>Total Students</span><span class="badge badge-blue">${s.total}</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+          <span>Present Today</span><span class="badge badge-green">${s.present}</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+          <span>Absent Today</span><span class="badge badge-red">${s.absent}</span></div>
+        <div style="display:flex;justify-content:space-between;padding:8px 0;">
+          <span>Late Today</span><span class="badge badge-yellow">${s.late}</span></div>`;
+
+      // Top students (alphabetical for now)
+      const topEl = document.getElementById('report-top');
+      if (topEl) {
+        const top = students.slice(0,10);
+        const colors = ['#003087','#c8102e','#1a56c4','#0891b2','#16a34a','#7c3aed','#b45309','#db2777'];
+        topEl.innerHTML = `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:10px;">
+          ${top.map((s,i) => `<div style="display:flex;align-items:center;gap:10px;padding:10px;border:1px solid var(--border);border-radius:8px;">
+            <div style="width:36px;height:36px;border-radius:50%;background:${colors[i%colors.length]};color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;flex-shrink:0">
+              ${(s.first_name||'').charAt(0)}${(s.last_name||'').charAt(0)}
+            </div>
+            <div><div style="font-size:12px;font-weight:600">${s.last_name}, ${s.first_name}</div>
+            <div style="font-size:10px;color:var(--muted)">${s.section}</div></div>
+          </div>`).join('')}
+        </div>`;
+      }
+    } catch(err) { console.warn('Reports load error:', err.message); }
+  }
+</script>
+</body>
