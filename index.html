@@ -544,9 +544,24 @@
   async function api(endpoint, method = 'GET', body = null) {
     const opts = {
       method,
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'application/json' },
+      mode: 'cors'
     };
     if (authToken) opts.headers['X-Auth-Token'] = authToken;
+    if (body) opts.body = JSON.stringify(body);
+    const res  = await fetch(`${API_BASE}/${endpoint}`, opts);
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.error || 'Request failed');
+    return data;
+  }
+
+  // Public API call — no auth token (for signup/login)
+  async function publicApi(endpoint, method = 'GET', body = null) {
+    const opts = {
+      method,
+      headers: { 'Content-Type': 'application/json' },
+      mode: 'cors'
+    };
     if (body) opts.body = JSON.stringify(body);
     const res  = await fetch(`${API_BASE}/${endpoint}`, opts);
     const data = await res.json();
@@ -1389,7 +1404,7 @@
 
     btn.textContent = 'Creating…'; btn.disabled = true;
     try {
-      await api('signup.php', 'POST', { role, name, username, password, usn, section });
+      await publicApi('signup.php', 'POST', { role, name, username, password, usn, section });
       succEl.style.display = 'block';
       setTimeout(() => showLogin(), 2000);
     } catch(err) {
