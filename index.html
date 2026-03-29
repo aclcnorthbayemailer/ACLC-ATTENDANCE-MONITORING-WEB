@@ -312,7 +312,7 @@ const API = 'https://aclc-attendance-monitoring-api-production.up.railway.app/ap
 const COLORS = ['#003087','#c8102e','#1a56c4','#0891b2','#16a34a','#7c3aed','#b45309','#db2777'];
 
 let currentUser = null;
-let authToken   = localStorage.getItem('auth_token') || '';
+let authToken   = ''; // Always start fresh — no auto-login from localStorage
 let SECTIONS    = [];
 let activePage  = 'dashboard';
 let activeSection = '';
@@ -360,6 +360,10 @@ async function doLogin() {
   const btn      = document.getElementById('login-btn');
   errEl.classList.remove('visible');
   if (!username || !password) { errEl.textContent = 'Please enter username and password.'; errEl.classList.add('visible'); return; }
+  // Clear any existing session before logging in
+  currentUser = null;
+  authToken = '';
+  localStorage.removeItem('auth_token');
   btn.textContent = 'Signing in…'; btn.disabled = true;
   try {
     const data  = await publicApi('login.php', 'POST', { username, password, role: currentRole });
