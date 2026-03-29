@@ -381,13 +381,22 @@ async function doLogin() {
 
 async function doLogout() {
   try { await api('logout.php','POST'); } catch(e) {}
-  currentUser = null; authToken = '';
+  currentUser = null; authToken = ''; currentRole = 'admin';
   localStorage.removeItem('auth_token');
   SECTIONS = []; activePage = 'dashboard';
   document.getElementById('view-app').classList.remove('active');
   document.getElementById('view-login').classList.add('active');
   document.getElementById('login-username').value = '';
   document.getElementById('login-password').value = '';
+  // Reset role tabs to Admin
+  document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
+  const adminTab = document.querySelector('.role-tab[data-role="admin"]') || document.querySelector('.role-tab');
+  if (adminTab) adminTab.classList.add('active');
+  const labels = { admin:'Username', teacher:'Username', student:'Student ID' };
+  const idLabel = document.getElementById('login-id-label');
+  if (idLabel) idLabel.textContent = labels['admin'];
+  // Force full page reload to clear all state
+  setTimeout(() => window.location.reload(), 100);
 }
 
 async function showApp() {
