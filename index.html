@@ -364,6 +364,7 @@ async function doLogin() {
   currentUser = null;
   authToken = '';
   localStorage.removeItem('auth_token');
+  sessionStorage.clear();
   btn.textContent = 'Signing in…'; btn.disabled = true;
   try {
     const data  = await publicApi('login.php', 'POST', { username, password, role: currentRole });
@@ -381,22 +382,9 @@ async function doLogin() {
 
 async function doLogout() {
   try { await api('logout.php','POST'); } catch(e) {}
-  currentUser = null; authToken = ''; currentRole = 'admin';
+  // Full page reload — cleanest way to reset all state
   localStorage.removeItem('auth_token');
-  SECTIONS = []; activePage = 'dashboard';
-  document.getElementById('view-app').classList.remove('active');
-  document.getElementById('view-login').classList.add('active');
-  document.getElementById('login-username').value = '';
-  document.getElementById('login-password').value = '';
-  // Reset role tabs to Admin
-  document.querySelectorAll('.role-tab').forEach(t => t.classList.remove('active'));
-  const adminTab = document.querySelector('.role-tab[data-role="admin"]') || document.querySelector('.role-tab');
-  if (adminTab) adminTab.classList.add('active');
-  const labels = { admin:'Username', teacher:'Username', student:'Student ID' };
-  const idLabel = document.getElementById('login-id-label');
-  if (idLabel) idLabel.textContent = labels['admin'];
-  // Force full page reload to clear all state
-  setTimeout(() => window.location.reload(), 100);
+  window.location.href = window.location.pathname;
 }
 
 async function showApp() {
@@ -676,6 +664,10 @@ function updateDateLabel(){
 
 async function loadStudents() {
   const tb=document.getElementById('att-tbody');
+  if (!activeSection) {
+    if(tb) tb.innerHTML=`<tr><td colspan="7" class="empty">Please select a section.</td></tr>`;
+    return;
+  }
   if(tb) tb.innerHTML=`<tr><td colspan="7" class="empty"><span class="spinner"></span></td></tr>`;
   try {
     const d=await api(`students.php?section=${encodeURIComponent(activeSection)}&date=${activeDate}`);
